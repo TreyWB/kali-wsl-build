@@ -80,7 +80,7 @@ sudo systemctl start docker
 - Bloodhound will display the default credentials and URL to access it over localhost
 - Data ingestors for BloodHound-CE can be downloaded inside the local BloodHound web app
 
-### 4. Add BurpSuite Proxy to FoxyProxy
+### 3. Add BurpSuite Proxy to FoxyProxy
 - Launch Firefox
 - Extensions > FoxyProxy > Options > Proxies > Add
 
@@ -90,6 +90,6 @@ Hostname: 127.0.0.1
 Port: 8080
 ```
 
-### 5. Initialize Tmux Theme
+### 4. Initialize Tmux Theme
 - Launch tmux in terminal: `tmux new`
 - Finalize plugin installation: `<Ctrl B> + <i>`
