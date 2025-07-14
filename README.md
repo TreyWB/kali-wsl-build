@@ -68,6 +68,10 @@ ansible-playbook main.yml --ask-become-pass
 ### 1. Reboot system
 
 **System reboot required for some changes to take effect**
+```powershell
+# Powershell
+wsl --shutdown
+```
 
 ### 2. Complete BloodHound-CE Installation
 ```bash
