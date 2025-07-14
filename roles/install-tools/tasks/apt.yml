@@ -1,0 +1,19 @@
+- name: "Installing tools from apt"
+  package:
+    name:
+      - pipenv
+      - jq
+      - ripgrep
+      - neo4j
+      - htop
+    state: present
+  become: true
+
+- name: "Uninstalling unwanted tools"
+  package:
+    name:
+      - hashcat
+      - python3-impacket
+      - impacket-scripts
+    state: absent
+  become: true

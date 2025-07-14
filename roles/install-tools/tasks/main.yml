@@ -1,0 +1,20 @@
+---
+- name: "Installing Apt Tools"
+  ansible.builtin.include_tasks:
+    file: "apt.yml"
+
+- name: "Installing Github Tools"
+  ansible.builtin.include_tasks:
+    file: "git.yml"
+
+- name: "Installing Pipx Tools"
+  ansible.builtin.include_tasks:
+    file: "pipx.yml"
+
+- name: "Installing NVChad"
+  ansible.builtin.include_tasks:
+    file: "nvchad.yml"
+
+- name: "Installing Docker & BloodHound Community Edition"
+  ansible.builtin.include_tasks:
+    file: "docker-bloodhound.yml"

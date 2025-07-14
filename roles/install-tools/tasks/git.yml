@@ -1,0 +1,129 @@
+- name: "Setting /opt ownership"
+  ansible.builtin.file:
+    path: "/opt"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0755"
+  become: true
+
+- name: "Create temporary build directory"
+  ansible.builtin.tempfile:
+    state: directory
+  register: build_dir_temp
+
+- name: "Check if repo already exists"
+  stat:
+    path: "{{ item.dest }}/.git"
+  register: repo_exists
+  delegate_to: localhost
+  run_once: false
+  loop: "{{ Repos }}"
+  loop_control:
+    label: "{{ item.repo }}"
+
+- name: "Cloning repositories"
+  ansible.builtin.git:
+    repo: "https://github.com/{{ item.repo }}"
+    dest: "{{ item.dest }}"
+    version: "{{ item.version }}"
+    update: no
+  when: not repo_exists.results[my_idx].stat.exists
+  loop: "{{ Repos }}"
+  loop_control:
+    label: "{{ item.repo }}"
+    index_var: my_idx
+
+- name: "Pulling latest changes"
+  ansible.builtin.git:
+    repo: "https://github.com/{{ item.repo }}"
+    dest: "{{ item.dest }}"
+    version: "{{ item.version }}"
+    update: yes
+    force: true
+  when: repo_exists.results[my_idx].stat.exists
+  loop: "{{ Repos }}"
+  loop_control:
+    label: "{{ item.repo }}"
+    index_var: my_idx
+
+- name: "Checking for existing Laudanum"
+  stat:
+    path: "/opt/laudanum"
+  register: laudanum_exists
+
+# Cannot `git pull` because of extraction
+- name: "Cloning Webshells (temp dir)"
+  git:
+    repo: "https://github.com/jbarcia/Web-Shells.git"
+    dest: "{{ build_dir_temp.path }}/Web-Shells"
+    version: master
+  when: laudanum_exists.stat.exists
+
+- name: "Installing Laudanum"
+  copy:
+    src: "{{ build_dir_temp.path }}/Web-Shells/laudanum"
+    dest: "/opt/laudanum"
+    mode: "0755"
+  when: laudanum_exists.stat.exists
+
+- name: "Checking for existing RockYou"
+  stat:
+    path: "/opt/rockyou.txt"
+  register: rockyou_exists
+
+# No need to `git pull`
+- name: "Cloning RockYou"
+  shell:
+    cmd: "wget https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt -O /opt/rockyou.txt"
+  when: not rockyou_exists.stat.exists
+
+# Cannot `git pull` because of extraction
+- name: "Cloning TreyWB/PenTest repo"
+  git:
+    repo: "https://github.com/TreyWB/PenTest.git"
+    dest: "{{ build_dir_temp.path }}/PenTest"
+    version: "main"
+
+- name: "Removing README.md from /opt/PenTest if present"
+  file:
+    path: "{{ build_dir_temp.path }}/PenTest/README.md"
+    state: absent
+
+- name: "Installing TreyWB/PenTest repo"
+  copy:
+    src: "{{ build_dir_temp.path }}/PenTest/"
+    dest: "/opt/"
+    mode: "0755"
+    remote_src: yes
+    force: yes
+
+- name: "Installing opengrep"
+  shell:
+    cmd: "curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh | bash"
+
+- name: "Copying github release python script"
+  copy:
+    src: "files/githubdownload.py"
+    dest: "{{ build_dir_temp.path }}/githubdownload.py"
+    mode: 0755
+  become: true
+
+- name: "Downloading Github Releases"
+  shell: "{{ build_dir_temp.path }}/githubdownload.py {{ item.repo }} {{ item.regex }} {{ item.location }} {% if item.filename is defined %}{{ item.filename }}{% endif %}"
+  loop:
+    - { repo: "ropnop/kerbrute", regex: "_linux_amd64", location: "/opt", filename: "kerbrute" }
+    - { repo: "carlospolop/PEASS-ng",  regex: "linpeas.sh", location: "/opt/peas" }
+    - { repo: "carlospolop/PEASS-ng",  regex: "winPEASx64.exe", location: "/opt/peas" }
+
+- name: "Making binaries executable"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0755"
+  loop:
+    - { path: "/opt/peas/linpeas.sh" }
+    - { path: "/opt/kerbrute" }
+
+- name: "Cleaning up temp dir"
+  ansible.builtin.file:
+    path: "{{ build_dir_temp.path }}"
+    state: absent

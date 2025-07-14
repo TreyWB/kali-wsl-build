@@ -1,0 +1,17 @@
+---
+- name: "Building Parrot"
+  hosts: localhost
+  connection: local
+
+  roles:
+    - role: "configure-system"
+    - role: "clone-dotfiles"
+    - role: "configure-terminal"
+    - role: "configure-firefox"
+    - role: "install-tools"
+
+  tasks:
+    - name: "Cleaning up dotfiles directory"
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/dotfiles"
+        state: absent

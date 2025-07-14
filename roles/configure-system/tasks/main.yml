@@ -1,0 +1,14 @@
+---
+- name: "Updating system"
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: yes
+    autoremove: yes
+    autoclean: yes
+  become: true
+
+- name: "Installing kali-linux-default metapackage"
+  package:
+    name: "kali-linux-default"
+    state: present
+  become: true

@@ -1,0 +1,42 @@
+- name: "Creating temp dir"
+  ansible.builtin.tempfile:
+    state: directory
+  register: build_dir_temp
+
+- name: "Copying github download script"
+  copy:
+    src: "files/githubdownload.py"
+    dest: "{{ build_dir_temp.path }}/githubdownload.py"
+    mode: 0755
+
+- name: "Downloading NeoVim Github Release"
+  shell: "{{ build_dir_temp.path }}/githubdownload.py neovim/neovim -linux-x86_64.tar.gz /opt"
+  register: nvchad_download
+
+- name: "Checking for existing nvim config"
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.config/nvim"
+  register: nvim_config_exists
+
+- name: "Backing up existing nvim config"
+  ansible.builtin.copy:
+    src: "{{ ansible_env.HOME }}/.config/nvim"
+    dest: "{{ ansible_env.HOME }}/.config/nvim.original"
+    mode: 0644
+  register: nvim_backup_result
+  when: nvim_config_exists.stat.exists
+
+- name: "Removing existing nvim config"
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/nvim"
+    state: absent
+  when: nvim_config_exists.stat.exists
+
+- name: "Installing NVChad"
+  shell:
+    cmd: "git clone https://github.com/NvChad/starter {{ ansible_env.HOME }}/.config/nvim"
+
+- name: "Cleaning up temp dir"
+  ansible.builtin.file:
+    path: "{{ build_dir_temp.path }}"
+    state: absent

@@ -1,0 +1,26 @@
+- name: "Check for BurpSuite Certificate"
+  stat:
+    path: "/usr/local/share/ca-certificates/BurpSuiteCA.der"
+  register: burp_cert_exists
+
+- name: "Copying Cert Download Script"
+  copy:
+    src: files/getburpcert.sh
+    dest: /tmp/getburpcert.sh
+    mode: "0744"
+  when: not burp_cert_exists.stat.exists
+
+- name: "Downloading Burpsuite Cert"
+  shell:
+    /tmp/getburpcert.sh
+  when: not burp_cert_exists.stat.exists
+
+- name: "Copying Cert to /usr/local/share/ca-certificates/"
+  copy:
+    src: /tmp/cacert.der
+    dest: /usr/local/share/ca-certificates/BurpSuiteCA.der
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  when: not burp_cert_exists.stat.exists

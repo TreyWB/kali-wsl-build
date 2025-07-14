@@ -1,0 +1,8 @@
+---
+- name: "Cloning dotfiles"
+  ansible.builtin.git:
+    repo: "https://github.com/TreyWB/dotfiles.git"
+    dest: "{{ ansible_env.HOME }}/dotfiles"
+    version: "main"
+  tags:
+    - clone-dotfiles

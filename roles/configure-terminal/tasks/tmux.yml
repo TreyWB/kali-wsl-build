@@ -1,0 +1,53 @@
+- name: "Checking for existing tmux config"
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
+  register: tmux_config_check
+
+- name: "Checking for existing tmux config backup"
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.tmux.conf.original"
+  register: tmux_config_backup_check
+
+- name: "Backing up tmux config"
+  ansible.builtin.copy:
+    src: "{{ ansible_env.HOME }}/.tmux.conf"
+    dest: "{{ ansible_env.HOME }}/.tmux.conf.original"
+    group: "{{ ansible_env.USER }}"
+    owner: "{{ ansible_env.USER }}"
+    mode: "0644"
+  when: 
+    - tmux_config_check.stat.exists
+    - not tmux_config_backup_check.stat.exists
+
+- name: "Installing tmux"
+  apt:
+    name: tmux
+    state: present
+  become: true
+  become_user: root
+  tags:
+    - install-tmux
+
+- name: "Check for existing tpm plugin manager"
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+  register: tpm_plugin_manager_check
+
+- name: "Installing tpm plugin manager"
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+    version: "master"
+  when: not tpm_plugin_manager_check.stat.exists
+  tags:
+    - install-tpm
+
+- name: "Fetching tmux config from dotfiles"
+  ansible.builtin.copy:
+    src: "{{ ansible_env.HOME }}/dotfiles/kali/.tmux.conf"
+    dest: "{{ ansible_env.HOME }}/.tmux.conf"
+    group: "{{ ansible_env.USER }}"
+    owner: "{{ ansible_env.USER }}"
+    mode: "0644"
+  tags:
+    - install-tmux-config

@@ -1,0 +1,105 @@
+{
+  "policies": {
+    "NewTabPage": false,
+    "Homepage": {
+      "URL": "about:blank",
+      "StartPage": "homepage"
+    },
+    "Certificates": {
+        "Install": ["/usr/local/share/ca-certificates/BurpSuiteCA.der"]
+    },
+    "Extensions": {
+        "Install": [
+{% for item in FirefoxPlugins %}
+        "https://addons.mozilla.org/firefox/downloads/latest/{{ item }}/latest.xpi"{{ "," if not loop.last }}
+{% endfor %}
+        ]
+    },
+    "BookmarksToolbar": "never",
+    "SearchSuggestEnabled": false,
+    "UserMessaging": {
+      "WhatsNew": false,
+      "ExtensionRecommendations": false,
+      "FeatureRecommendations": false,
+      "UrlbarInterventions": false,
+      "SkipOnboarding": true,
+      "MoreFromMozilla": false
+    },
+    "FirefoxSuggest": {
+      "WebSuggestions": false,
+      "SponsoredSuggestions": false,
+      "ImproveSuggest": false,
+      "Locked": true
+    },
+    "PasswordManager": false,
+    "DisableStudies": true,
+    "DisableTelemetry": true,
+    "DisableFirefoxAccounts": false,
+    "DisableFormHistory": false,
+    "AutofillAddressEnabled": false,
+    "AutofillCreditCardEnabled": false,
+    "PictureInPicture": {
+      "Enabled": true,
+      "Locked": false
+    },
+    "HardwareAcceleration": true,
+    "Preferences": {
+      "general.autoScroll": {
+        "Value": true,
+        "Status": "default"
+      },
+      "media.hardwaremediakeys.enabled": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "media.videocontrols.picture-in-picture.video-toggle.enabled": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.urlbar.suggest.engines": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.urlbar.suggest.openpage": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.urlbar.suggest.topsites": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.urlbar.suggest.trending": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.newtabpage.activity-stream.feeds.topsites": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.newtabpage.activity-stream.section.highlights.includeDownloads": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.newtabpage.activity-stream.section.highlights.includePocket": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.newtabpage.activity-stream.showSearch": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.newtabpage.activity-stream.showSponsored": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "browser.newtabpage.activity-stream.showSponsoredTopSites": {
+        "Value": false,
+        "Status": "locked"
+      },
+      "signon.management.page.breach-alerts.enabled": {
+        "Value": false,
+        "Status": "locked"
+      }
+    }
+  }
+}

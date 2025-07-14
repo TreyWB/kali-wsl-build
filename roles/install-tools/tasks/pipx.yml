@@ -1,0 +1,16 @@
+- name: "Installing pipx"
+  package:
+    name:
+      - pipx
+    state: present
+  become: true
+
+- name: "Installing pipx tools"
+  community.general.pipx:
+    name: "{{ item.name }}"
+    source: "{{ item.url }}"
+    state: latest
+  loop:
+    - { name: 'git-dumper', url: 'git+https://github.com/arthaud/git-dumper.git' }
+    - { name: 'certipy-ad', url: 'git+https://github.com/ly4k/Certipy.git' }
+    - { name: 'bloodhound-ce', url: 'git+https://github.com/dirkjanm/BloodHound.py.git@bloodhound-ce' }
