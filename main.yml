@@ -1,5 +1,5 @@
 ---
-- name: "Building Parrot"
+- name: "Building Kali"
   hosts: localhost
   connection: local
 
