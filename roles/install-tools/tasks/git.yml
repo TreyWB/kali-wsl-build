@@ -1,3 +1,9 @@
+- name: "Installing gh"
+  package:
+    name: gh
+    state: present
+  become: true
+
 - name: "Setting /opt ownership"
   ansible.builtin.file:
     path: "/opt"
