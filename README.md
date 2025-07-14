@@ -43,9 +43,9 @@ git clone https://github.com/treywb/kali-wsl-build
 cd kali-wsl-build/
 ```
 
-### 4. Ansible-install requirements
-```bash 
-ansible-galaxy install -r requirements.yml
+### 5. Run the playbook & provide user password when prompted
+```bash
+ansible-playbook main.yml --ask-become-pass
 ```
 
 If you encounter the error:
@@ -54,12 +54,6 @@ If you encounter the error:
 
 This command will set the required environment variable:
 `export LC_ALL="C.UTF-8"`
-
-
-### 5. Run the playbook & provide user password when prompted
-```bash
-ansible-playbook main.yml --ask-become-pass
-```
 
 ## Post-Installation
 - System reboot required for some changes to take effect
