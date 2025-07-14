@@ -1,12 +1,35 @@
-# kali-build
+# kali-wsl-build
 
-Ansible Playbook to automatically configure Kali VMs (to my preferences). Will install new tools, clone github repos, and configure OS settings.
+Ansible Playbook to automatically configure Kali VMs for WSL (to my preferences). Will install new tools, clone github repos, and configure OS settings.
 
 Heavily inspired by [Ippsec](https://github.com/ippsec/parrot-build/) and his video series using Ansible for ParrotOS on [Youtube](https://youtube.com/playlist?list=PLidcsTyj9JXJVIFqyHBHzrRYKPpZYFjM8&si=6n2xfM20y4F5v_i1)
 
 ## Installation
-### 1. Download/Install [Kali Linux](https://www.kali.org/get-kali/#kali-platforms)
-- This playbook does not support Kali-WSL images
+### 1. Install Kali for WSL
+
+#### Method #1: Microsoft Store
+https://apps.microsoft.com/detail/9pkr34tncv07?hl=en-US&gl=US
+
+#### Method #2: Image Import
+* Download image https://image-wsl.kali.org/kali-weekly/
+* Import image with WSL:
+```powershell
+# Powershell
+wsl --import "<instance_name>" "<install_location>" "<path\to\tar.gz>" --version 2
+```
+
+* Configure user account:
+```bash
+# Bash
+adduser <username>
+
+usermod -aG sudo <username>
+```
+* Set default account for WSL
+```powershell
+# Powershell
+wsl --manage <instance_name> --set-default-user <username>
+```
 
 ### 2. Install ansible
 ```bash
@@ -15,9 +38,9 @@ sudo apt install ansible
 
 ### 3. Clone this repository and go into it
 ```bash
-git clone https://github.com/treywb/kali-build
+git clone https://github.com/treywb/kali-wsl-build
 
-cd kali-build/
+cd kali-wsl-build/
 ```
 
 ### 4. Ansible-install requirements
@@ -46,12 +69,7 @@ ansible-playbook main.yml --ask-become-pass
 
 **System reboot required for some changes to take effect**
 
-### 2. Set default terminal application
-- Open 'Default Applications'
-- Set Utilities > Terminal Emulator:
-`mate-terminal --geometry=172x41`
-
-### 3. Complete BloodHound-CE Installation
+### 2. Complete BloodHound-CE Installation
 ```bash
 cd /opt/BloodHound
 
