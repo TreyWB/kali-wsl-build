@@ -11,24 +11,11 @@ Heavily inspired by [Ippsec](https://github.com/ippsec/parrot-build/) and his vi
 https://apps.microsoft.com/detail/9pkr34tncv07?hl=en-US&gl=US
 
 #### Method #2: Image Import
-* Download image https://image-wsl.kali.org/kali-weekly/
+* Download image: https://kali.download/wsl-images/current/
 * Import image with WSL:
 ```powershell
 # Powershell
-wsl --import "<instance_name>" "<install_location>" "<path\to\tar.gz>" --version 2
-```
-
-* Configure user account:
-```bash
-# Bash
-adduser <username>
-
-usermod -aG sudo <username>
-```
-* Set default account for WSL
-```powershell
-# Powershell
-wsl --manage <instance_name> --set-default-user <username>
+wsl --install --from-file "<.wsl_file>" --location "<install_location>" --name "<instance_name>"
 ```
 
 ### 2. Install ansible
