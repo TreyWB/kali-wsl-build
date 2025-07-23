@@ -6,6 +6,7 @@
       - ripgrep
       - neo4j
       - htop
+      - netexec
     state: present
   become: true
 
