@@ -21,3 +21,6 @@ Repos:
   - repo: "dirkjanm/ldapdomaindump"
     dest: "/opt/ldapdomaindump"
     version: "master"
+  - repo: "insidetrust/statistically-likely-usernames"
+    dest: "/opt/statistically-likely-usernames"
+    version: "master"
