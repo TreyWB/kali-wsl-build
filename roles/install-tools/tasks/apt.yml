@@ -7,6 +7,7 @@
       - neo4j
       - htop
       - netexec
+      - python3-pyftpdlib
     state: present
   become: true
 
