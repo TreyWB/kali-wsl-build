@@ -53,19 +53,7 @@ This command will set the required environment variable:
 # Powershell
 wsl --shutdown
 ```
-
-### 2. Complete BloodHound-CE Installation
-```bash
-cd /opt/BloodHound
-
-sudo systemctl start docker
-
-./bloodhound-cli install
-```
-- Bloodhound will display the default credentials and URL to access it over localhost
-- Data ingestors for BloodHound-CE can be downloaded inside the local BloodHound web app
-
-### 3. Add BurpSuite Proxy to FoxyProxy
+### 2. Add BurpSuite Proxy to FoxyProxy
 - Launch Firefox
 - Extensions > FoxyProxy > Options > Proxies > Add
 
@@ -75,6 +63,17 @@ Hostname: 127.0.0.1
 Port: 8080
 ```
 
-### 4. Initialize Tmux Theme
+### 3. Initialize Tmux Theme
 - Launch tmux in terminal: `tmux new`
 - Finalize plugin installation: `<Ctrl B> + <i>`
+
+### 4. Complete BloodHound-CE Installation
+```bash
+cd /opt/BloodHound
+
+sudo systemctl start docker
+
+./bloodhound-cli install
+```
+- Bloodhound will display the default credentials and URL to access it over localhost
+- Data ingestors for BloodHound-CE can be downloaded inside the local BloodHound web app
