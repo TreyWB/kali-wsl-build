@@ -24,3 +24,6 @@ Repos:
   - repo: "insidetrust/statistically-likely-usernames"
     dest: "/opt/statistically-likely-usernames"
     version: "master"
+  - repo: "dafthack/DomainPasswordSpray"
+    dest: "/opt/DomainPasswordSpray"
+    version: "master"
