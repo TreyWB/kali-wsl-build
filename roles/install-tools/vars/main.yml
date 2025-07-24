@@ -18,3 +18,6 @@ Repos:
   - repo: "opengrep/opengrep-rules"
     dest: "/opt/opengrep-rules"
     version: "main"
+  - repo: "dirkjanm/ldapdomaindump"
+    dest: "/opt/ldapdomaindump"
+    version: "master"
