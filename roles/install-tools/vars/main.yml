@@ -27,3 +27,6 @@ Repos:
   - repo: "dafthack/DomainPasswordSpray"
     dest: "/opt/DomainPasswordSpray"
     version: "master"
+  - repo: "leoloobeek/LAPSToolkit"
+    dest: "/opt/LAPSToolkit"
+    version: "master"
