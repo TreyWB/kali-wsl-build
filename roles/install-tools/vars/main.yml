@@ -30,3 +30,6 @@ Repos:
   - repo: "leoloobeek/LAPSToolkit"
     dest: "/opt/LAPSToolkit"
     version: "master"
+  - repo: "dirkjanm/BloodHound.py"
+    dest: "/opt/bloodhound-py"
+    version: "bloodhound-ce"
