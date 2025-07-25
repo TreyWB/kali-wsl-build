@@ -8,6 +8,7 @@
       - htop
       - netexec
       - python3-pyftpdlib
+      - impacket-scripts
     state: present
   become: true
 
