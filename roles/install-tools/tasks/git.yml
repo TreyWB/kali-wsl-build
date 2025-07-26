@@ -114,12 +114,30 @@
     mode: 0755
   become: true
 
+- name: "Cloning Snaffler repo"
+  git:
+    repo: "https://github.com/SnaffCon/Snaffler"
+    dest: "/opt"
+    version: master
+  register: snaffler_exists
+
+- name: "Purging Snaffler repo (leaving only README.md)"
+  shell:
+    cmd: "find /opt/Snaffler/ -mindepth 1 -maxdepth 1 ! -name "*.md" -exec rm -rf {} +"
+  when: snaffler_exists.stat.exists
+
 - name: "Downloading Github Releases"
   shell: "{{ build_dir_temp.path }}/githubdownload.py {{ item.repo }} {{ item.regex }} {{ item.location }} {% if item.filename is defined %}{{ item.filename }}{% endif %}"
   loop:
     - { repo: "ropnop/kerbrute", regex: "_linux_amd64", location: "/opt", filename: "kerbrute" }
     - { repo: "carlospolop/PEASS-ng",  regex: "linpeas.sh", location: "/opt/peas" }
     - { repo: "carlospolop/PEASS-ng",  regex: "winPEASx64.exe", location: "/opt/peas" }
+    - { repo: "hashcat/hashcat", regex: ".7z", location: "/home", filename: "hashcat" }
+    - { repo: "SnaffCon/Snaffler", regex: ".exe", location: "/opt/Snaffler" }
+
+- name: "Unzipping hashcat"
+  shell:
+    cmd: "7z x /home/hashcat"
 
 - name: "Making binaries executable"
   ansible.builtin.file:
