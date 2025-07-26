@@ -114,17 +114,21 @@
     mode: 0755
   become: true
 
+- name: "Checking for existing Snaffler repo"
+  stat:
+    path: "/opt/Snaffler"
+  register: snaffler_exists
+
 - name: "Cloning Snaffler repo"
   git:
     repo: "https://github.com/SnaffCon/Snaffler"
-    dest: "/opt"
+    dest: "/opt/Snaffler"
     version: master
-  register: snaffler_exists
+  when: not snaffler_exists.stat.exists
 
 - name: "Purging Snaffler repo (leaving only README.md)"
   shell:
-    cmd: "find /opt/Snaffler/ -mindepth 1 -maxdepth 1 ! -name "*.md" -exec rm -rf {} +"
-  when: snaffler_exists.stat.exists
+    cmd: "find /opt/Snaffler/ -mindepth 1 -maxdepth 1 ! -name '*.md' -exec rm -rf {} +"
 
 - name: "Downloading Github Releases"
   shell: "{{ build_dir_temp.path }}/githubdownload.py {{ item.repo }} {{ item.regex }} {{ item.location }} {% if item.filename is defined %}{{ item.filename }}{% endif %}"
@@ -132,12 +136,26 @@
     - { repo: "ropnop/kerbrute", regex: "_linux_amd64", location: "/opt", filename: "kerbrute" }
     - { repo: "carlospolop/PEASS-ng",  regex: "linpeas.sh", location: "/opt/peas" }
     - { repo: "carlospolop/PEASS-ng",  regex: "winPEASx64.exe", location: "/opt/peas" }
-    - { repo: "hashcat/hashcat", regex: ".7z", location: "/home", filename: "hashcat" }
+    - { repo: "hashcat/hashcat", regex: ".7z", location: "{{ build_dir_temp.path }}", filename: "hashcat.7z" }
     - { repo: "SnaffCon/Snaffler", regex: ".exe", location: "/opt/Snaffler" }
+
+- name: "Checking for existing hashcat directory in /home"
+  stat:
+    path: "/home/{{ ansible_user_id }}/hashcat"
+  register: hashcat_exists
+
+- name: "Removing existing hashcat directory (if exists)"
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user_id }}/hashcat"
+    state: absent
 
 - name: "Unzipping hashcat"
   shell:
-    cmd: "7z x /home/hashcat"
+    cmd: "7z x {{ build_dir_temp.path }}/hashcat.7z -o/home/{{ ansible_user_id }}"
+
+- name: "Renaming hashcat directory"
+  shell:
+    cmd: "mv /home/{{ ansible_user_id }}/hashcat* /home/{{ ansible_user_id }}/hashcat"
 
 - name: "Making binaries executable"
   ansible.builtin.file:
